@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Object</title>
+  <style>
+    *{
+      background-color: black;
+      color: white;
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .Header1{
+      font-size: 35px;
+      font-weight: bold;
+    }
+    #rock, #paper, #scissor{
+      padding: 50px;
+      margin-left: 10px;
+      border: 3px solid white;
+      border-radius: 65px;
+      cursor: pointer;
+    }
+    .move-emoji{
+      height: 130px;
+      width: 150px;
+    }
+    .move-button{
+      background-color: transparent;
+    }
+
+    .win-condition{
+      font-size: 55px;
+      font-weight: bold;
+    }
+    .score{
+      font-size: 25px;
+      font-weight: bold;
+      margin: 100px 0px;
+    }
+    .result{
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .picked-emoji{
+      height: 130px;
+    }
+
+    .reset{
+      background-color: white;
+      color: black;
+      padding: 13px 50px;
+      font-weight: bolder;
+    }
+
+
+  </style>
+
+</head>
+<body>
+  <p class="Header1">Rock Paper Scissors</p>
+  <button class="move-button" id="rock" onclick="playGame('Rock')"><img src="img/Rock-emoji.png" class="move-emoji"></button>
+  <button class="move-button" id="paper" onclick="playGame('Paper')"><img src="img/Paper-emoji.png" class="move-emoji"></button>
+  <button class="move-button" id="scissor" onclick="playGame('Scissor')"><img src="img/Scissor-emoji.png" class="move-emoji"></button>
+  
+
+  <br>
+  <br>
+  <p class="win-condition">You ____</p>
+  <p class="result">
+    You picked <img src="img/Rock-emoji.png" class = "picked-emoji">  vs <img src="img/Rock-emoji.png" class = "picked-emoji"> picked by Computer.</p>
+  <p class="score">Your score is Wins: 0 | Loses: 0 | Draws: 0</p>
+
+  <button class="reset" onclick="reset()">Reset Score</button>
+
+  <script>
+  const storedData = localStorage.getItem('score');
+  //If data exists ? parse it : otherwise initialize it
+  const score = storedData ? JSON.parse(storedData) : {
+      Wins: 0,
+      Draws: 0,
+      Loses: 0,
+
+  
+  }
+
+  /*
+    const score = JSON.parse(localStorage.getItem('score')) || {
+      Wins: 0,
+      Draws: 0,
+      Loses: 0,
+    }
+  */
+
+    function playGame(userGuess){
+    const choices =['Rock', 'Paper', 'Scissor'];
+    const randomGuess = choices[Math.floor(Math.random()*3)];
+    const result =
+    
+      userGuess == randomGuess ? 'Draw' : 
+      (userGuess == 'Rock' && randomGuess == 'Scissor') || (userGuess == 'Paper' && randomGuess == 'Rock') || (userGuess == 'Scissor' && randomGuess == 'Paper') ? 'Win' : 'Lose';
+
+      result === 'Draw' ? score.Draws += 1 : result === 'Win' ? score.Wins += 1 : result === 'Lose' ? score.Loses += 1 : undefined;
+
+      localStorage.setItem('score', JSON.stringify(score));
+
+      
+    const winCondition = document.querySelector('.win-condition');
+    const showResult = document.querySelector('.result');
+    const scoreBoard = document.querySelector('.score');
+
+    winCondition.innerHTML = (`You ${result}`);
+    showResult.innerHTML = (`You picked <img src="img/${userGuess}-emoji.png" class = "picked-emoji">  vs <img src="img/${randomGuess}-emoji.png" class = "picked-emoji"> picked by Computer.`);
+    scoreBoard.innerHTML = (`Your score is Wins: ${score.Wins} | Loses: ${score.Loses} | Draws: ${score.Draws}`);
+
+  }
+    function reset(){
+      score.Loses = 0;
+      score.Wins = 0;
+      score.Draws = 0;
+      localStorage.removeItem('score');
+
+      document.querySelector('.score').innerHTML = (`Your score is Wins: 0 | Loses: 0 | Draws: 0`);
+    }
+  </script>
+</body>
+</html>
